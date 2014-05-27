@@ -17,15 +17,18 @@
 
 <ul ng-controller="SpectraCtrl">
     <li class="controls">
-        <label for="volume">Volume</label>
+        <label for="volume">Volume ({{gain.value | number:2 }})</label>
         <input
             name="valume"
             type="range"
             min="0"
-            max="1"
+            max="{{maxGain}}"
             step="0.01"
             ng-model="gain.value"
         />
+        <br />
+        <label for="max_gain">Max Gain</label>
+        <input type="number" min="0.1" max="0.25" step="0.01" ng-model="maxGain" />
         <br />
         <b><a href="#stop" ng-click="stop()">Stop!</a></b>
     </li>
@@ -43,8 +46,10 @@ function SpectraCtrl($scope){
     var AudioContext = AudioContext || webkitAudioContext;
     var context = new AudioContext();
     var masterVolume = context.createGain();
+    masterVolume.gain.value = 0.15;
     masterVolume.connect(context.destination);
 
+    $scope.maxGain = 0.25;
     $scope.gain = masterVolume.gain;
 
     var playing = [];
