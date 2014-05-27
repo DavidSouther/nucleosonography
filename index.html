@@ -21,7 +21,10 @@
         <input
             name="valume"
             type="range"
-            ng-model="volume"
+            min="0"
+            max="1"
+            step="0.01"
+            ng-model="gain.value"
         />
         <br />
         <b><a href="#stop" ng-click="stop()">Stop!</a></b>
@@ -41,10 +44,7 @@ function SpectraCtrl($scope){
     var masterVolume = context.createGain();
     masterVolume.connect(context.destination);
 
-    $scope.volume = 50;
-    $scope.$watch($scope.volume, function(){
-        masterVolume.gain.value = $scope.volume / 100;
-    });
+    $scope.gain = masterVolume.gain;
 
     var playing = [];
 
