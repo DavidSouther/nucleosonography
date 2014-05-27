@@ -4,7 +4,13 @@
     <title>Nucleo Sonography</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <style>
-
+        .controls {
+            position: fixed;
+            top: 1em;
+            left: 10em;
+            width: 10em;
+            height: 3em;
+        }
     </style>
 </head>
 <body ng-app>
@@ -18,7 +24,7 @@
             ng-model="volume"
         />
         <br />
-        <a href="#stop" ng-click="stop()">Stop!</a>
+        <b><a href="#stop" ng-click="stop()">Stop!</a></b>
     </li>
     <li ng-repeat="(symbol, lines) in spectra">
         <a ng-href="#{{symbol}}" ng-name="{{symbol}}" ng-click="play(symbol)"
