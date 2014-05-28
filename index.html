@@ -33,6 +33,10 @@
         <br />
         <b><a href="#" ng-click="stop()">Stop!</a></b>
         <a href="https://github.com/DavidSouther/nucleosonography/blob/gh-pages/README.md">About</a>
+        <br />
+        <label for="formula">Chord</label>
+        <input type="text" name="formula" ng-model="formula" />
+        <button ng-click="chord(formula)">Play!</button>
     </li>
     <li ng-repeat="(symbol, lines) in spectra">
         <a ng-href="#{{symbol}}" ng-name="{{symbol}}" ng-click="play(symbol)"
@@ -82,14 +86,12 @@ function SpectraCtrl($scope, $window){
         return oscillatorNode;
     }
 
-    $scope.play = function(element){
+    playElement = function(element){
         var i, osc, gain;
-        $scope.stop();
         var lines = $scope.spectra[element].lines;
         var notes = {};
         lines.reduce(function(notes, line){
             var nearest = nearestPitch(line[0] / 10);
-            // nearest = line[0];
             notes[nearest] = notes[nearest] || {
                 count: 0,
                 intensity: 0
@@ -100,11 +102,24 @@ function SpectraCtrl($scope, $window){
         }, notes);
 
         for(var pitch in notes){
-            playing.push(connectFrequency(pitch, notes[pitch].intensity / notes[pitch].intensity));
+            osc = connectFrequency(pitch, notes[pitch].intensity / notes[pitch].intensity);
+            playing.push(osc);
+            osc.start();
         }
+    }
 
-        for(i=0; i<playing.length; i++){
-            playing[i].start();
+    $scope.play = function(element){
+        $scope.stop();
+        playElement(element);
+    }
+
+    var rchem = /([A-Z][a-z]{0,2})([0-9]*)?/g
+    $scope.chord = function(formula){
+        var parts = {}, total, arr;
+        while((arr = rchem.exec(formula)) !== null){
+            parts[arr[1]] = arr[2] || 1;
+            total += parts[arr[1]];
+            playElement(arr[1]);
         }
     }
 
