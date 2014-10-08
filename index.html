@@ -8,9 +8,13 @@
         .controls {
             position: fixed;
             top: 1em;
-            left: 10em;
+            left: 20em;
             width: 10em;
             height: 3em;
+        }
+
+        svg {
+            background: black;
         }
     </style>
 </head>
@@ -41,6 +45,12 @@
     <li ng-repeat="(symbol, lines) in spectra">
         <a ng-href="#{{symbol}}" ng-name="{{symbol}}" ng-click="play(symbol)"
         >{{symbol}}</a>, {{ elements.by.symbol[symbol].name }}
+        <svg width="100px" height="18px">
+           <rect ng-repeat="line in lines.lines" y="0" ng-attr-x="{{vscale(line[0])}}"
+            ng-attr-fill="hsl( {{ vscale(line[0]) / 200 * 256 }}, 100%, 50%)"
+            height="18px" width="1px" stroke-width="0"
+            />
+        </svg>
     </li>
 </ul>
 
@@ -107,6 +117,10 @@ function SpectraCtrl($scope, $window){
             osc.start();
         }
     }
+
+    $scope.vscale = function (freq) {
+        return ((freq - 3800) / 3700) * 200;
+    };
 
     $scope.play = function(element){
         $scope.stop();
